@@ -1,61 +1,236 @@
-# Contributing to Aegis Platform
+# Contributing to Aegis
 
 Thank you for your interest in contributing to Aegis! This document provides guidelines and instructions for contributing to the project.
 
-## 🌟 Ways to Contribute
+## Table of Contents
 
-- **Code**: Implement new features, fix bugs, improve performance
-- **Documentation**: Improve README, add tutorials, write API docs
-- **Testing**: Write tests, report bugs, improve test coverage
-- **Design**: Improve UI/UX, create mockups, suggest improvements
-- **Ideas**: Propose new features, discuss architecture, share feedback
+- [Code of Conduct](#code-of-conduct)
+- [Getting Started](#getting-started)
+- [Development Workflow](#development-workflow)
+- [Coding Standards](#coding-standards)
+- [Commit Guidelines](#commit-guidelines)
+- [Pull Request Process](#pull-request-process)
+- [Issue Guidelines](#issue-guidelines)
 
-## 🚀 Getting Started
+---
 
-### 1. Fork and Clone
+## Code of Conduct
+
+### Our Standards
+
+- Be respectful and inclusive
+- Welcome newcomers and help them get started
+- Focus on constructive feedback
+- Prioritize the community and project goals
+
+### Unacceptable Behavior
+
+- Harassment or discriminatory language
+- Trolling or insulting comments
+- Publishing others' private information
+- Other conduct inappropriate in a professional setting
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+Before contributing, ensure you have:
+- Node.js 18+ and npm installed
+- Python 3.11+ installed
+- Git configured with your name and email
+- A GitHub account
+
+### Setting Up Development Environment
+
+1. **Fork the repository** on GitHub
+
+2. **Clone your fork**
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/Aegis-.git
+   cd Aegis-
+   ```
+
+3. **Add upstream remote**
+   ```bash
+   git remote add upstream https://github.com/Abhiroop-24/Aegis-.git
+   ```
+
+4. **Install dependencies**
+   ```bash
+   # Frontend
+   cd frontend
+   npm install
+   
+   # Backend
+   cd ../backend
+   python -m venv venv
+   source venv/bin/activate
+   pip install -r requirements.txt
+   ```
+
+5. **Configure environment variables**
+   ```bash
+   # Frontend
+   cp frontend/.env.local.example frontend/.env.local
+   
+   # Backend
+   cp backend/.env.example backend/.env
+   ```
+
+---
+
+## Development Workflow
+
+### Branch Strategy
+
+- `main` - Production-ready code
+- `develop` - Integration branch for features
+- `feature/*` - New features
+- `fix/*` - Bug fixes
+- `docs/*` - Documentation updates
+
+### Creating a Feature Branch
 
 ```bash
-# Fork the repository on GitHub
-# Then clone your fork
-git clone https://github.com/YOUR_USERNAME/Aegis-.git
-cd Aegis-
-
-# Add upstream remote
-git remote add upstream https://github.com/Abhiroop-24/Aegis-.git
-```
-
-### 2. Set Up Development Environment
-
-Follow the setup instructions in the [README.md](README.md):
-- Install Node.js 18+ and Python 3.11+
-- Set up frontend and backend
-- Configure database
-- Run tests to ensure everything works
-
-### 3. Create a Branch
-
-```bash
-# Update your fork
-git checkout main
-git pull upstream main
-
-# Create a feature branch
 git checkout -b feature/your-feature-name
 ```
 
-Branch naming conventions:
-- `feature/` - New features
-- `fix/` - Bug fixes
-- `docs/` - Documentation changes
-- `refactor/` - Code refactoring
-- `test/` - Test additions/changes
-- `perf/` - Performance improvements
+### Keeping Your Fork Updated
 
-## 📝 Commit Guidelines
+```bash
+git fetch upstream
+git checkout main
+git merge upstream/main
+git push origin main
+```
 
-We follow [Conventional Commits](https://www.conventionalcommits.org/) for clear and structured commit history.
+---
 
-### Commit Format
+## Coding Standards
+
+### TypeScript/JavaScript (Frontend)
+
+**Style Guidelines**
+- Use TypeScript for all new code
+- Follow ESLint configuration
+- Use functional components with hooks
+- Prefer named exports over default exports
+- Use meaningful variable and function names
+
+**Example**
+```typescript
+// Good
+interface IncidentMarkerProps {
+  incident: Incident;
+  onMarkerClick: (id: string) => void;
+}
+
+export function IncidentMarker({ incident, onMarkerClick }: IncidentMarkerProps) {
+  // Component logic
+}
+
+// Avoid
+export default function Marker(props: any) {
+  // Component logic
+}
+```
+
+**Component Structure**
+```typescript
+// 1. Imports
+import { useState } from "react";
+import { Incident } from "@/types";
+
+// 2. Types/Interfaces
+interface ComponentProps {
+  // props
+}
+
+// 3. Component
+export function Component({ prop }: ComponentProps) {
+  // 4. Hooks
+  const [state, setState] = useState();
+  
+  // 5. Event handlers
+  const handleClick = () => {
+    // logic
+  };
+  
+  // 6. Render
+  return (
+    // JSX
+  );
+}
+```
+
+### Python (Backend)
+
+**Style Guidelines**
+- Follow PEP 8 style guide
+- Use type hints for function parameters and returns
+- Write docstrings for classes and functions
+- Use async/await for I/O operations
+- Keep functions focused and single-purpose
+
+**Example**
+```python
+from typing import List, Optional
+from pydantic import BaseModel
+
+class Incident(BaseModel):
+    """Represents a safety incident with location and severity."""
+    
+    id: str
+    incident_type: str
+    severity: int
+    latitude: float
+    longitude: float
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "id": "inc_123",
+                "incident_type": "theft",
+                "severity": 3,
+                "latitude": 41.8781,
+                "longitude": -87.6298
+            }
+        }
+
+async def get_incidents(
+    bbox: str,
+    limit: int = 1000
+) -> List[Incident]:
+    """
+    Retrieve incidents within a bounding box.
+    
+    Args:
+        bbox: Bounding box string "minLng,minLat,maxLng,maxLat"
+        limit: Maximum number of incidents to return
+        
+    Returns:
+        List of Incident objects
+    """
+    # Implementation
+    pass
+```
+
+### CSS/Styling
+
+- Use Tailwind CSS utility classes
+- Follow mobile-first responsive design
+- Use custom CSS only when necessary
+- Maintain consistent spacing and colors
+
+---
+
+## Commit Guidelines
+
+### Commit Message Format
+
+Follow the Conventional Commits specification:
 
 ```
 <type>(<scope>): <subject>
@@ -65,293 +240,227 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/) for clear
 <footer>
 ```
 
-### Types
-
+**Types**
 - `feat`: New feature
 - `fix`: Bug fix
-- `docs`: Documentation only changes
-- `style`: Code style changes (formatting, missing semicolons, etc.)
-- `refactor`: Code change that neither fixes a bug nor adds a feature
-- `perf`: Performance improvement
+- `docs`: Documentation changes
+- `style`: Code style changes (formatting, no logic change)
+- `refactor`: Code refactoring
+- `perf`: Performance improvements
 - `test`: Adding or updating tests
-- `chore`: Changes to build process or auxiliary tools
+- `chore`: Maintenance tasks
 
-### Examples
-
+**Examples**
 ```bash
-# Good commits
-git commit -m "feat: add heatmap toggle control with animation"
-git commit -m "fix: resolve marker clustering performance issue"
-git commit -m "docs: update API endpoint documentation"
-git commit -m "perf: optimize incident query with spatial index"
+feat(map): add incident marker clustering
 
-# Bad commits (avoid these)
-git commit -m "update stuff"
-git commit -m "fix bug"
-git commit -m "changes"
+Implement marker clustering using react-leaflet-cluster to improve
+performance when displaying large numbers of incidents.
+
+Closes #123
 ```
 
-### Commit Frequency
+```bash
+fix(api): correct safety score calculation
 
-- Make **3-5 meaningful commits per day** rather than one large commit
-- Each commit should represent a logical unit of work
-- Commit when you complete a task, not at arbitrary times
+The safety score was not properly weighting recent incidents.
+Updated the algorithm to apply exponential decay based on time.
+```
 
-## 🧪 Testing Requirements
+```bash
+docs(readme): update installation instructions
+
+Add detailed steps for PostgreSQL setup and PostGIS extension.
+```
+
+### Commit Best Practices
+
+- Write clear, descriptive commit messages
+- Keep commits focused on a single change
+- Commit frequently with logical groupings
+- Reference issue numbers when applicable
+- Use present tense ("add feature" not "added feature")
+
+---
+
+## Pull Request Process
 
 ### Before Submitting
 
-1. **Run all tests**:
+1. **Update your branch**
    ```bash
-   # Frontend
-   cd frontend && npm run test
-   
-   # Backend
-   cd backend && pytest
+   git fetch upstream
+   git rebase upstream/main
    ```
 
-2. **Check code style**:
+2. **Run tests**
    ```bash
    # Frontend
+   cd frontend
+   npm test
    npm run lint
    
    # Backend
-   black . && flake8
+   cd backend
+   pytest
    ```
 
-3. **Test manually**:
-   - Test your changes in the browser
-   - Verify on mobile viewport
-   - Check API endpoints with `/docs`
+3. **Build successfully**
+   ```bash
+   cd frontend
+   npm run build
+   ```
 
-### Writing Tests
+### Creating a Pull Request
 
-- **Frontend**: Use Jest + React Testing Library
-- **Backend**: Use pytest + pytest-asyncio
-- **Property-Based**: Use Hypothesis for data parsing/serialization
+1. **Push your branch**
+   ```bash
+   git push origin feature/your-feature-name
+   ```
 
-Example test structure:
-```python
-def test_calculate_safety_score():
-    """Test safety score calculation with known inputs"""
-    # Arrange
-    incidents = create_test_incidents()
-    
-    # Act
-    score = calculate_safety_score(lat=41.8781, lng=-87.6298, incidents=incidents)
-    
-    # Assert
-    assert 0 <= score <= 100
-    assert score < 50  # Should be low due to recent incidents
-```
+2. **Open PR on GitHub**
+   - Use a clear, descriptive title
+   - Reference related issues
+   - Describe what changed and why
+   - Add screenshots for UI changes
+   - List any breaking changes
 
-## 📋 Pull Request Process
-
-### 1. Prepare Your PR
-
-```bash
-# Ensure your branch is up to date
-git checkout main
-git pull upstream main
-git checkout feature/your-feature-name
-git rebase main
-
-# Push to your fork
-git push origin feature/your-feature-name
-```
-
-### 2. Create Pull Request
-
-1. Go to the [Aegis repository](https://github.com/Abhiroop-24/Aegis-)
-2. Click "New Pull Request"
-3. Select your fork and branch
-4. Fill out the PR template
-
-### 3. PR Title Format
-
-Use the same format as commit messages:
-```
-feat: add heatmap toggle control
-fix: resolve marker clustering issue
-docs: update setup instructions
-```
-
-### 4. PR Description Template
+### PR Template
 
 ```markdown
 ## Description
-Brief description of what this PR does
+Brief description of changes
 
 ## Type of Change
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Breaking change
 - [ ] Documentation update
 
 ## Testing
-- [ ] I have tested this code locally
-- [ ] I have added tests that prove my fix is effective or that my feature works
-- [ ] All new and existing tests pass
+Describe testing performed
 
 ## Screenshots (if applicable)
 Add screenshots for UI changes
 
 ## Checklist
-- [ ] My code follows the project's style guidelines
-- [ ] I have performed a self-review of my own code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have made corresponding changes to the documentation
-- [ ] My changes generate no new warnings
-- [ ] I have added tests that prove my fix is effective or that my feature works
+- [ ] Code follows project style guidelines
+- [ ] Self-review completed
+- [ ] Comments added for complex code
+- [ ] Documentation updated
+- [ ] No new warnings generated
+- [ ] Tests added/updated
+- [ ] All tests passing
 ```
 
-### 5. Review Process
+### Review Process
 
-- Maintainers will review your PR within 2-3 days
-- Address any requested changes
-- Once approved, your PR will be merged!
+- Maintainers will review your PR
+- Address feedback and requested changes
+- Keep discussions professional and constructive
+- Be patient - reviews may take time
 
-## 🎯 Good First Issues
+---
 
-New to the project? Look for issues labeled:
-- `good-first-issue` - Perfect for beginners
-- `help-wanted` - We need help with these
-- `documentation` - Improve docs
+## Issue Guidelines
 
-## 💡 Feature Requests
+### Creating Issues
 
-Have an idea? We'd love to hear it!
+**Bug Reports**
+```markdown
+**Describe the bug**
+Clear description of the issue
 
-1. Check if the feature is already requested in [Issues](https://github.com/Abhiroop-24/Aegis-/issues)
-2. If not, create a new issue with the `feature-request` label
-3. Describe:
-   - What problem does it solve?
-   - How should it work?
-   - Any implementation ideas?
+**To Reproduce**
+Steps to reproduce:
+1. Go to '...'
+2. Click on '...'
+3. See error
 
-## 🐛 Bug Reports
+**Expected behavior**
+What should happen
 
-Found a bug? Help us fix it!
+**Screenshots**
+If applicable
 
-1. Check if the bug is already reported
-2. Create a new issue with the `bug` label
-3. Include:
-   - Steps to reproduce
-   - Expected behavior
-   - Actual behavior
-   - Screenshots (if applicable)
-   - Environment (OS, browser, versions)
-
-## 📚 Code Style
-
-### Frontend (TypeScript/React)
-
-- Use TypeScript for type safety
-- Follow React best practices
-- Use functional components with hooks
-- Keep components small and focused
-- Use Tailwind CSS for styling
-
-```typescript
-// Good
-interface MapProps {
-  center: [number, number];
-  zoom: number;
-}
-
-export function Map({ center, zoom }: MapProps) {
-  // Component logic
-}
-
-// Bad
-export function Map(props: any) {
-  // Component logic
-}
+**Environment**
+- OS: [e.g., Windows 10]
+- Browser: [e.g., Chrome 120]
+- Version: [e.g., 1.0.0]
 ```
 
-### Backend (Python)
+**Feature Requests**
+```markdown
+**Problem Statement**
+Describe the problem this feature would solve
 
-- Follow PEP 8 style guide
-- Use type hints
-- Write docstrings for functions
-- Keep functions small and focused
+**Proposed Solution**
+Describe your proposed solution
 
-```python
-# Good
-def calculate_safety_score(
-    lat: float,
-    lng: float,
-    radius: float = 500
-) -> SafetyScore:
-    """
-    Calculate safety score for a location.
-    
-    Args:
-        lat: Latitude coordinate
-        lng: Longitude coordinate
-        radius: Search radius in meters
-        
-    Returns:
-        SafetyScore object with score and metadata
-    """
-    # Function logic
+**Alternatives Considered**
+Other approaches you've considered
 
-# Bad
-def calc_score(lat, lng, r=500):
-    # Function logic
+**Additional Context**
+Any other relevant information
 ```
 
-## 🤝 Code of Conduct
+### Issue Labels
 
-### Our Pledge
+- `bug` - Something isn't working
+- `enhancement` - New feature or request
+- `documentation` - Documentation improvements
+- `good first issue` - Good for newcomers
+- `help wanted` - Extra attention needed
+- `question` - Further information requested
 
-We are committed to providing a welcoming and inclusive environment for all contributors, regardless of:
-- Age, body size, disability, ethnicity
-- Gender identity and expression
-- Level of experience
-- Nationality, personal appearance, race
-- Religion, sexual identity and orientation
+---
 
-### Our Standards
+## Areas for Contribution
 
-**Positive behavior includes:**
-- Using welcoming and inclusive language
-- Being respectful of differing viewpoints
-- Gracefully accepting constructive criticism
-- Focusing on what is best for the community
-- Showing empathy towards other community members
+### Frontend Development
+- UI/UX improvements
+- New visualization components
+- Performance optimization
+- Responsive design enhancements
+- Accessibility improvements
 
-**Unacceptable behavior includes:**
-- Trolling, insulting/derogatory comments, personal or political attacks
-- Public or private harassment
-- Publishing others' private information without permission
-- Other conduct which could reasonably be considered inappropriate
+### Backend Development
+- API endpoint implementation
+- Database query optimization
+- Data processing pipelines
+- Authentication and authorization
+- Caching strategies
 
-### Enforcement
+### Data Science/ML
+- Risk prediction models
+- Feature engineering
+- Model evaluation and tuning
+- Data cleaning and normalization
+- Anomaly detection algorithms
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the project maintainers. All complaints will be reviewed and investigated promptly and fairly.
+### Documentation
+- Code documentation
+- API documentation
+- User guides and tutorials
+- Architecture diagrams
+- Contributing guidelines
 
-## 📞 Getting Help
+### Testing
+- Unit tests
+- Integration tests
+- End-to-end tests
+- Performance testing
+- Security testing
 
-- **Discord**: [Join our community](https://discord.gg/aegis) (coming soon)
-- **GitHub Discussions**: Ask questions, share ideas
-- **Email**: aegis-dev@example.com
+---
 
-## 🎓 Learning Resources
+## Questions?
 
-New to the technologies we use?
+If you have questions about contributing:
+- Check existing issues and discussions
+- Open a new issue with the `question` label
+- Reach out to maintainers
 
-- **Next.js**: [Official Tutorial](https://nextjs.org/learn)
-- **FastAPI**: [Official Tutorial](https://fastapi.tiangolo.com/tutorial/)
-- **Leaflet**: [Quick Start Guide](https://leafletjs.com/examples/quick-start/)
-- **TypeScript**: [Handbook](https://www.typescriptlang.org/docs/handbook/intro.html)
-- **Python**: [Official Tutorial](https://docs.python.org/3/tutorial/)
+---
 
-## 🏆 Recognition
-
-Contributors will be recognized in:
-- README.md contributors section
-- Release notes
-- Project website (coming soon)
-
-Thank you for contributing to Aegis! Together, we're making cities safer. 🛡️
+Thank you for contributing to Aegis and helping build safer urban communities!
