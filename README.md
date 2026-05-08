@@ -51,8 +51,8 @@ Aegis aggregates public safety incident data and provides intelligent insights t
 
 **1. Clone repository**
 ```bash
-git clone https://github.com/Abhiroop-24/Aegis-.git
-cd Aegis-
+git clone https://github.com/Abhiroop-24/Aegis.git
+cd Aegis
 ```
 
 **2. Frontend**
@@ -131,3 +131,4 @@ MIT License - see [LICENSE](LICENSE) file for details.
 ## Contact
 
 GitHub: [@Abhiroop-24](https://github.com/Abhiroop-24)
+Repository: [https://github.com/Abhiroop-24/Aegis](https://github.com/Abhiroop-24/Aegis)
