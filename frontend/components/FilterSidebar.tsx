@@ -9,7 +9,7 @@ interface FilterSidebarProps {
     incidentTypes: string[];
     severityRange: [number, number];
   };
-  onFiltersChange: (filters: any) => void;
+  onFiltersChange: (filters: FilterSidebarProps['filters']) => void;
   heatmapEnabled: boolean;
   onHeatmapToggle: (enabled: boolean) => void;
   safetyGridEnabled: boolean;
