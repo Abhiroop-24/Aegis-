@@ -11,8 +11,9 @@ export interface Incident {
   incident_type: string;
   severity: 1 | 2 | 3 | 4 | 5;
   description?: string;
-  location: Location;
-  occurred_at: string; // ISO 8601 datetime
+  latitude: number;
+  longitude: number;
+  occurred_at: string;
   reported_at?: string;
   source: string;
   metadata?: Record<string, any>;
