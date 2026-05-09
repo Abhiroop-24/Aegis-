@@ -12,7 +12,11 @@ import SafetyGrid from "./SafetyGrid";
 import useIncidents from "@/lib/hooks/useIncidents";
 
 interface MapContainerProps {
-  filters: any;
+  filters: {
+    dateRange: { start: Date | null; end: Date | null };
+    incidentTypes: string[];
+    severityRange: [number, number];
+  };
   heatmapEnabled: boolean;
   safetyGridEnabled: boolean;
 }
