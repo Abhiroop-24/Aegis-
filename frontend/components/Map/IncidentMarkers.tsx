@@ -3,14 +3,21 @@
 import { Marker, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
+import React from "react";
 import { Incident } from "@/types";
 
 interface IncidentMarkersProps {
   incidents: Incident[];
 }
 
-// Create custom icons based on severity
-const createIcon = (severity: number) => {
+// Cache custom icons based on severity to avoid recreating them for hundreds of markers
+const iconCache: Record<number, L.DivIcon> = {};
+
+const getCachedIcon = (severity: number) => {
+  if (iconCache[severity]) {
+    return iconCache[severity];
+  }
+
   const colors = {
     1: "#10b981", // green
     2: "#84cc16", // lime
@@ -21,7 +28,7 @@ const createIcon = (severity: number) => {
 
   const color = colors[severity as keyof typeof colors] || colors[3];
 
-  return L.divIcon({
+  const icon = L.divIcon({
     html: `
       <div style="
         background-color: ${color};
@@ -35,9 +42,13 @@ const createIcon = (severity: number) => {
     className: "",
     iconSize: [12, 12],
   });
+
+  iconCache[severity] = icon;
+  return icon;
 };
 
-export default function IncidentMarkers({ incidents }: IncidentMarkersProps) {
+// Use React.memo to prevent unnecessary re-renders when parent state (like Map layer toggles) changes
+const IncidentMarkers = React.memo(function IncidentMarkers({ incidents }: IncidentMarkersProps) {
   if (!incidents || incidents.length === 0) return null;
 
   return (
@@ -51,7 +62,7 @@ export default function IncidentMarkers({ incidents }: IncidentMarkersProps) {
         <Marker
           key={incident.id}
           position={[incident.latitude, incident.longitude]}
-          icon={createIcon(incident.severity)}
+          icon={getCachedIcon(incident.severity)}
         >
           <Popup>
             <div className="p-2 min-w-[200px]">
@@ -90,4 +101,6 @@ export default function IncidentMarkers({ incidents }: IncidentMarkersProps) {
       ))}
     </MarkerClusterGroup>
   );
-}
+});
+
+export default IncidentMarkers;
